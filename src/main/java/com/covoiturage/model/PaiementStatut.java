@@ -1,6 +1,7 @@
 package com.covoiturage.model;
 
-public enum Paiement_statut {
+
+public enum PaiementStatut {
     EN_ATTENTE_PAIEMENT("En attente"), // le client n a pas encore paye
     BLOCKED("blocké"),//bloque ches la societe
     TERMINE("Terminé"),//argent envoyer au conducteur
@@ -9,7 +10,7 @@ public enum Paiement_statut {
     private final String displayLabel;
 
     // Constructor
-    Paiement_statut(String displayLabel) {
+    PaiementStatut(String displayLabel) {
         this.displayLabel = displayLabel;
     }
 

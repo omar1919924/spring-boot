@@ -16,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Conducteur extends Client {
+    private String permis;
     @OneToMany(mappedBy = "conducteur")
     private List<Trajet>trajet;
 

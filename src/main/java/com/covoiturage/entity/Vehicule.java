@@ -12,13 +12,13 @@ import lombok.Setter;
 public class Vehicule {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long vehicule_id;
+    private Long vehiculeId;
     private String immatriculation;
     private String marque;
     private String modele;
-    private Integer nbplaces;
+    private Integer nbPlaces;
     @ManyToOne
-    @JoinColumn (name ="conducteur_id")
+    @JoinColumn (name ="conducteurId")
     private Conducteur conducteur;
 
 }

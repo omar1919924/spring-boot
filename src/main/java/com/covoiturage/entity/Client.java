@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 @Setter
 public class Client extends User{
     protected double note;
-    private LocalDateTime startban;
-    private LocalDateTime finban;
+    private LocalDateTime startBan;
+    private LocalDateTime finBan;
 
-    public Client(double note, LocalDateTime startban, LocalDateTime finban) {
+    public Client(double note, LocalDateTime startBan, LocalDateTime finBan) {
         this.note = note;
-        this.startban = startban;
-        this.finban = finban;
+        this.startBan = startBan;
+        this.finBan = finBan;
     }
 
 

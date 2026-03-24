@@ -15,13 +15,13 @@ import java.util.List;
 public class Trajet {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    protected long trajet_id;
+    protected long trajetId;
     protected String depart;
 
     protected String destination;
     protected LocalDateTime dateDepart;
     protected int placesTotal;
-    protected int placeReserve;
+    protected int placeLibre;
     protected double prix;
 
     @Enumerated(EnumType.STRING)
@@ -32,7 +32,7 @@ public class Trajet {
 
 
     @ManyToOne
-    @JoinColumn(name = "conducteur_id")
+    @JoinColumn(name = "conducteurId")
     private Conducteur conducteur;
 
 }

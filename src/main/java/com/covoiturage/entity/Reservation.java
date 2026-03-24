@@ -18,7 +18,7 @@ import lombok.Setter;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long ReservationId;
 
     private LocalDateTime dateReservation;
     private Double montant;
@@ -27,11 +27,11 @@ public class Reservation {
     private ReservationStatut reservationStatut;
 
     @ManyToOne
-    @JoinColumn(name = "passager_id")
+    @JoinColumn(name = "passagerId")
     private Passager passager;        // ← annotation juste au-dessus
 
     @ManyToOne
-    @JoinColumn(name = "trajet_id")
+    @JoinColumn(name = "trajetId")
     private Trajet trajet;            // ← manquait aussi
 
     @OneToOne(mappedBy = "reservation")
