@@ -18,8 +18,11 @@ import java.util.List;
 public class Conducteur extends Client {
     private String permis;
     @OneToMany(mappedBy = "conducteur")
-    private List<Trajet>trajet;
+    private List<Trajet>trajets;
 
     @OneToMany(mappedBy = "conducteur")
     private List<Vehicule> vehicules;
+
+    @OneToMany(mappedBy = "conducteur")
+    private List<Rating> ratings;
 }

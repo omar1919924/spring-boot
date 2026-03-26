@@ -9,4 +9,5 @@ public interface ConducteurRepository extends JpaRepository<Conducteur, Long> {
 
     Optional<Conducteur> findByPermis(String permis);
     boolean existsByPermis(String permis);
+    Optional<Conducteur> findByEmail(String email);
 }

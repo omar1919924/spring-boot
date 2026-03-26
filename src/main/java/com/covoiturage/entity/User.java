@@ -29,10 +29,22 @@ public class User {
     protected String telephone;
 
 
-
-
-
-
+    public User(long userId, String nom, String prenom, String email, String password, String telephone) {
+        this.userId = userId;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+    }
+    public User(String nom, String prenom, String email, String password, String telephone) {
+        
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

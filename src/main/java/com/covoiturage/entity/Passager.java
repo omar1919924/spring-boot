@@ -17,4 +17,8 @@ public class Passager extends Client {
     protected String moyenPaiement;
     @OneToMany(mappedBy = "passager")
     private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "passager")
+    private List<Rating>ratings;
+
 }

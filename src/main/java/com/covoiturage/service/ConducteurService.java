@@ -1,19 +1,18 @@
 package com.covoiturage.service;
 
+import com.covoiturage.entity.Conducteur;
 import com.covoiturage.entity.Paiement;
 import com.covoiturage.entity.Trajet;
 import com.covoiturage.entity.Vehicule;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ConducteurService {
 
-    Vehicule ajouterVehicule(Long conducteurId, Vehicule vehicule);
+    Conducteur inscrireConducteur(Conducteur conducteur);
+    Optional<Conducteur> chercherConducteurId(Long Id);
 
-    List<Trajet> getMesTrajets(Long conducteurId);
-
-    List<Paiement> getMesGains(Long conducteurId);
-
-    void noterPassager(Long conducteurId, Long passagerId, double note);
+    Conducteur updateConducteur(Conducteur conducteur);
 
 }
