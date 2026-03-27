@@ -19,6 +19,9 @@ public class Passager extends Client {
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "passager")
-    private List<Rating>ratings;
+    private List<Rating> notesRecus;    // conducteur note le passager
+
+    @OneToMany(mappedBy = "conducteur")
+    private List<Rating> notesDonnes;
 
 }

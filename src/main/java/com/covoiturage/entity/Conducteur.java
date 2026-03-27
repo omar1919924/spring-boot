@@ -24,5 +24,8 @@ public class Conducteur extends Client {
     private List<Vehicule> vehicules;
 
     @OneToMany(mappedBy = "conducteur")
-    private List<Rating> ratings;
+    private List<Rating> notesRecues;
+
+    @OneToMany(mappedBy = "passager")
+    private List<Rating> notesDonnees;
 }

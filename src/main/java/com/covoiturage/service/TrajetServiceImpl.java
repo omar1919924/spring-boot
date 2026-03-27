@@ -1,7 +1,10 @@
 package com.covoiturage.service;
 
+import com.covoiturage.entity.Conducteur;
 import com.covoiturage.entity.Reservation;
 import com.covoiturage.entity.Trajet;
+import com.covoiturage.model.TrajetStatut;
+import com.covoiturage.repository.ConducteurRepository;
 import com.covoiturage.repository.TrajetRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -12,16 +15,21 @@ import java.util.List;
 public class TrajetServiceImpl implements TrajetService{
     private final TrajetRepository trajetRepository;
     private final PaiementService paiementService;
-    public TrajetServiceImpl (TrajetRepository trajetRepository,PaiementService paiementService){
+    private final ConducteurRepository conducteurRepository;
+    public TrajetServiceImpl (TrajetRepository trajetRepository,ConducteurRepository conducteurRepository,PaiementService paiementService){
         this.trajetRepository = trajetRepository;
         this.paiementService = paiementService;
+        this.conducteurRepository = conducteurRepository;
     }
 
     @Override
-    public Trajet proposerTrajet(Trajet t, Long ConducteurId) {
-        if (trajetRepository.findById(t.getTrajetId()).isPresent()){
-                throw new RuntimeException("Trajet already exists");
+    public Trajet proposerTrajet(Trajet t, Long conducteurId) {
+        Conducteur conducteur = conducteurRepository.findById(conducteurId)
+                .orElseThrow(()->new RuntimeException("conducteur not found"));
+        if (trajetRepository.findById(t.getTrajetId()).isPresent()) {
+            throw new RuntimeException("Trajet already exists");
         }
+        t.setConducteur(conducteur);
         return trajetRepository.save(t);
     }
 
@@ -60,7 +68,7 @@ public class TrajetServiceImpl implements TrajetService{
             // penalite
             int numClient = trajet.getReservations().size();
             paiementService.transfererCVE(trajet.getPrix()*numClient*0.2,conducteurId); //conducteur vers escrow
-
+            trajet.setTrajetStatut(TrajetStatut.ANNULE);
         }
         if((LocalDateTime.now().plusHours(24)).isAfter(trajet.getDateDepart())){
             throw new RuntimeException("less than 24h can t cancel");

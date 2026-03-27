@@ -1,8 +1,10 @@
 package com.covoiturage.service;
 
+import com.covoiturage.entity.Passager;
 import com.covoiturage.entity.Reservation;
 import com.covoiturage.entity.Trajet;
 import com.covoiturage.model.ReservationStatut;
+import com.covoiturage.repository.PassagerRepository;
 import com.covoiturage.repository.ReservationRepository;
 import com.covoiturage.repository.TrajetRepository;
 import org.springframework.stereotype.Service;
@@ -15,14 +17,19 @@ public class ReservationServiceImpl implements ReservationService{
     private final PaiementService paiementService;
     private final ReservationRepository reservationRepository;
     private final TrajetRepository trajetRepository;
-    public ReservationServiceImpl(ReservationRepository reservationRepository,TrajetRepository trajetRepository,PaiementService paiementService){
+    private final PassagerRepository passagerRepository;
+    public ReservationServiceImpl( PassagerRepository passagerRepository,ReservationRepository reservationRepository,TrajetRepository trajetRepository,PaiementService paiementService){
         this.reservationRepository = reservationRepository;
         this.trajetRepository = trajetRepository;
         this.paiementService = paiementService;
+        this.passagerRepository = passagerRepository;
     }
 
     @Override
-    public Reservation creerReservation(Long trajetId, Long clientId) {
+    public Reservation creerReservation(Long trajetId, Long passagerId) {
+        Passager passager = passagerRepository.findById(passagerId)
+                .orElseThrow(()->new RuntimeException("passager not found"));
+
         Trajet trajet = trajetRepository.findByTrajetId(trajetId)
                 .orElseThrow(()->new RuntimeException("trajet not found"));
         if(trajet.getPlaceLibre()<=0){
@@ -32,6 +39,8 @@ public class ReservationServiceImpl implements ReservationService{
         reservation.setDateReservation(LocalDateTime.now());
         reservation.setReservationStatut(ReservationStatut.NONCONFIRMEE);
         trajet.setPlaceLibre(trajet.getPlaceLibre()-1);
+        reservation.setPassager(passager);
+        reservation.setTrajet(trajet);
         return reservationRepository.save(reservation);
     }
 

@@ -31,7 +31,7 @@ public class AdminCompteServiceImpl implements AdminCompteService{
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(()->new RuntimeException("client not existing"));
         client.setStartBan(LocalDateTime.now());
-        client.setFinBan(LocalDateTime.now().minusDays(jour));
+        client.setFinBan(LocalDateTime.now().plusDays(jour));
         clientRepository.save(client);
     }
 

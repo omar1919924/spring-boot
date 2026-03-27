@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RatingService {
-    List<Rating> consulterRatingList(Long clientId);
-    Double avgRating(Long ClientId);
-    Rating ratePassager(Long reservationId, Long conducteurId, Double note); // Conducteur rates Passager
-    Rating rateConducteur (Long trajetId , Long passagerId,Double note); // Passager rates Conducteur
-
+    Rating rateConducteur(Long trajetId, Long passagerId, Double note);
+    Rating ratePassager(Long reservationId, Long conducteurId, Double note);
+    List<Rating> getNotesReçuesByConducteur(Long conducteurId);
+    List<Rating> getNotesReçuesByPassager(Long passagerId);
+    Double getMoyenneConducteur(Long conducteurId);
+    Double getMoyennePassager(Long passagerId);
 }

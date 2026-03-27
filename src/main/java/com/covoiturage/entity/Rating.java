@@ -25,6 +25,8 @@ public class Rating {
     @JoinColumn(name="trajetId")
     private Trajet trajet;
 
-
+    @ManyToOne
+    @JoinColumn(name = "reservation_id")
+    private Reservation reservation;
 
 }

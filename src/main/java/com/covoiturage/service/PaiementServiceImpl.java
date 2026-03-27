@@ -57,7 +57,7 @@ public class PaiementServiceImpl implements PaiementService{
         }
         Paiement p = paiementRepository.findById(paiementId)
                 .orElseThrow(()->new RuntimeException("paiement not initialized"));
-        transfererCVE(p.getMontant(),p.getReservation().getTrajet().getConducteur().getUserId());
+        transfererEVC(p.getMontant(),p.getReservation().getTrajet().getConducteur().getUserId());
     }
 
 
