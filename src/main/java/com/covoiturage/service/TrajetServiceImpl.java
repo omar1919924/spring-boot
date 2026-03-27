@@ -1,5 +1,6 @@
 package com.covoiturage.service;
 
+import com.covoiturage.entity.Reservation;
 import com.covoiturage.entity.Trajet;
 import com.covoiturage.repository.TrajetRepository;
 import jakarta.transaction.Transactional;
@@ -10,8 +11,10 @@ import java.util.List;
 @Service
 public class TrajetServiceImpl implements TrajetService{
     private final TrajetRepository trajetRepository;
-    public TrajetServiceImpl (TrajetRepository trajetRepository){
+    private final PaiementService paiementService;
+    public TrajetServiceImpl (TrajetRepository trajetRepository,PaiementService paiementService){
         this.trajetRepository = trajetRepository;
+        this.paiementService = paiementService;
     }
 
     @Override
@@ -53,7 +56,11 @@ public class TrajetServiceImpl implements TrajetService{
             trajetRepository.delete(trajet);
         }
         if((LocalDateTime.now().plusHours(24)).isBefore(trajet.getDateDepart())){
-            //transfererEVC(trajet.getPrix(),trajet.getReservations().getConducteur.getUserId())
+            paiementService.escrowClients(trajetId);
+            // penalite
+            int numClient = trajet.getReservations().size();
+            paiementService.transfererCVE(trajet.getPrix()*numClient*0.2,conducteurId); //conducteur vers escrow
+
         }
         if((LocalDateTime.now().plusHours(24)).isAfter(trajet.getDateDepart())){
             throw new RuntimeException("less than 24h can t cancel");
@@ -63,6 +70,6 @@ public class TrajetServiceImpl implements TrajetService{
 
     @Override
     public List<Trajet> getMesTrajets(Long conducteurId) {
-        return List.of();
+        return trajetRepository.findByConducteurId(conducteurId);
     }
 }

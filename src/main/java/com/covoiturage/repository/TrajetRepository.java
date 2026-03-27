@@ -5,12 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface TrajetRepository extends JpaRepository<Trajet, Long> {
 
     // Trajets d'un conducteur
     List<Trajet> findByConducteurId(Long conducteurId);
-
+    Optional<Trajet>findByTrajetId(Long trajetId);
     //depart et destination
     List<Trajet> findByDepartAndDestination(String depart, String destination);
 

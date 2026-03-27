@@ -35,4 +35,7 @@ public class Trajet {
     @JoinColumn(name = "conducteurId")
     private Conducteur conducteur;
 
+    @OneToMany(mappedBy = "trajet")
+    private List<Rating> ratings;
+
 }

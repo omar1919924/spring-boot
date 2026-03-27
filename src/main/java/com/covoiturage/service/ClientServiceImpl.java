@@ -15,15 +15,5 @@ public class ClientServiceImpl implements ClientService {
 
 
 
-    @Override
-    public void noterClient(Long clientAId, Long clientBId, double note) {
-    Client clientA = clientRepository.findById(clientAId)
-            .orElseThrow(()->new RuntimeException("Client A not found"));
-    Client clientB = clientRepository.findById(clientBId)
-            .orElseThrow(()->new RuntimeException("Client B not found"));
-    clientB.setNote(note);
-    clientRepository.save(clientB);
 
-
-    }
 }

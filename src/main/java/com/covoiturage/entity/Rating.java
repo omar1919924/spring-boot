@@ -20,4 +20,11 @@ public class Rating {
     @ManyToOne
     @JoinColumn(name="conducteurId")
     private Conducteur conducteur;
+
+    @ManyToOne
+    @JoinColumn(name="trajetId")
+    private Trajet trajet;
+
+
+
 }

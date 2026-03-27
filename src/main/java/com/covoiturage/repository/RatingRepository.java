@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RatingRepository extends JpaRepository<Rating,Long> {
-    List<Rating> findByConducteurId(Long conducteurId);
-    List<Rating> findByPassagerId(Long passagerId);
+    List<Rating> findByClientId(Long ClientId);
     Optional<Rating> findByRatingId(Long ratingId);
+
 }

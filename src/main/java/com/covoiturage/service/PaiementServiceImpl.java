@@ -12,6 +12,8 @@ import com.covoiturage.repository.TrajetRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PaiementServiceImpl implements PaiementService{
     private final PaiementRepository paiementRepository;
@@ -35,7 +37,7 @@ public class PaiementServiceImpl implements PaiementService{
         }
 
         Paiement p = new Paiement();
-        p.setMontant(res.getMontant());
+        p.setMontant(res.getTrajet().getPrix());
         p.setPaiementStatut(PaiementStatut.BLOCKED);
         p.setReservation(res);
         res.setReservationStatut(ReservationStatut.CONFIRMEE);
@@ -47,7 +49,7 @@ public class PaiementServiceImpl implements PaiementService{
 
     @Override
     @Transactional
-    public void escrowConducteur(Long trajetId,Long paiementId) {
+    public void escrowConducteur(Long trajetId,Long paiementId,Long ratio) {
         Trajet t = trajetRepository.findById(trajetId)
                 .orElseThrow(()->new RuntimeException("trajet non touvée"));
         if (!t.getTrajetStatut().equals(TrajetStatut.COMPLET)){
@@ -56,12 +58,12 @@ public class PaiementServiceImpl implements PaiementService{
         Paiement p = paiementRepository.findById(paiementId)
                 .orElseThrow(()->new RuntimeException("paiement not initialized"));
         transfererCVE(p.getMontant(),p.getReservation().getTrajet().getConducteur().getUserId());
-
-
     }
 
+
+    // remboursement pour Un Passager
     @Override
-    public void escrowClient(Long trajetId, Long paiementId) {
+    public void escrowClient(Long trajetId, Long paiementId,Double ratio) {
         Trajet t = trajetRepository.findById(trajetId)
                 .orElseThrow(()->new RuntimeException("trajet non touvée"));
         if (!t.getTrajetStatut().equals(TrajetStatut.ANNULE)){
@@ -69,7 +71,28 @@ public class PaiementServiceImpl implements PaiementService{
         }
         Paiement p = paiementRepository.findById(paiementId)
                 .orElseThrow(()->new RuntimeException("paiement not initialized"));
-        transfererEVC(p.getMontant(),p.getReservation().getTrajet().getConducteur().getUserId());
+
+        transfererEVC(p.getMontant() * ratio ,p.getReservation().getPassager().getUserId());
+
+    }
+
+
+
+
+    //remboursement pour tous les Passager
+    @Override
+    public void escrowClients(Long trajetId) {
+        Trajet t = trajetRepository.findById(trajetId)
+                .orElseThrow(()->new RuntimeException("trajet non touvée"));
+        if (!t.getTrajetStatut().equals(TrajetStatut.ANNULE)){
+            throw new RuntimeException("Remboursement ssi Trajet annule par conducteur");
+        }
+
+        List<Reservation> reservations = t.getReservations();
+        for (Reservation reservation : reservations){
+            transfererEVC(t.getPrix(),reservation.getPassager().getUserId());
+        }
+
     }
     // SIMULATION PAYEMENT
     @Override

@@ -1,6 +1,8 @@
 package com.covoiturage.entity;
 import com.covoiturage.model.ReservationStatut;
 import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +23,7 @@ public class Reservation {
     private Long ReservationId;
 
     private LocalDateTime dateReservation;
-    private Double montant;
+
 
     @Enumerated(EnumType.STRING)
     private ReservationStatut reservationStatut;
@@ -36,6 +38,7 @@ public class Reservation {
 
     @OneToOne(mappedBy = "reservation")
     private Paiement paiement;
+
 
 
 
