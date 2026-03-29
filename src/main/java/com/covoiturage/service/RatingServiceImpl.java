@@ -66,7 +66,7 @@ public class RatingServiceImpl implements RatingService {
     @Override
     @Transactional
     public Rating rateConducteur(Long trajetId, Long passagerId, Double note) {
-        Reservation reservation = reservationRepository.findByPassagerIdAndTrajetId(passagerId, trajetId)
+        Reservation reservation = reservationRepository.findByPassagerUserIdAndTrajetTrajetId(passagerId, trajetId)
                 .orElseThrow(() -> new RuntimeException("the passager has no reservation in this trajet"));
 
         Trajet trajet = trajetRepository.findByTrajetId(trajetId)

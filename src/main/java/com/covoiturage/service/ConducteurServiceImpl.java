@@ -35,17 +35,20 @@ public class ConducteurServiceImpl implements ConducteurService {
     }
 
     @Override
-    public Optional<Conducteur> chercherConducteurId(Long conducteurId) {
-        return conducteurRepository.findById(conducteurId);
+    public Conducteur chercherConducteurId(Long conducteurId) {
+        return conducteurRepository.findById(conducteurId)
+                .orElseThrow(()->new RuntimeException("Conducteur not found"));
     }
 
 
 
     @Override
     @Transactional
-    public Conducteur updateConducteur(Conducteur conducteur) {
-        conducteurRepository.findById(conducteur.getUserId())
-                .orElseThrow(() -> new RuntimeException("Conducteur not found"));
-        return conducteurRepository.save(conducteur);
+    public Conducteur updateConducteur(Long id, Conducteur conducteur) {
+        Conducteur existing = conducteurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Conducteur not found: " + id));
+        existing.setNom(conducteur.getNom());
+        existing.setPrenom(conducteur.getPrenom());
+        return conducteurRepository.save(existing);
     }
 }

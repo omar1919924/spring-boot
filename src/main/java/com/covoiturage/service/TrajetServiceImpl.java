@@ -78,6 +78,6 @@ public class TrajetServiceImpl implements TrajetService{
 
     @Override
     public List<Trajet> getMesTrajets(Long conducteurId) {
-        return trajetRepository.findByConducteurId(conducteurId);
+        return trajetRepository.findByConducteurUserId(conducteurId);
     }
 }

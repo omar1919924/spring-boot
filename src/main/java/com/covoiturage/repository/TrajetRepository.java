@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface TrajetRepository extends JpaRepository<Trajet, Long> {
 
     // Trajets d'un conducteur
-    List<Trajet> findByConducteurId(Long conducteurId);
+    List<Trajet> findByConducteurUserId(Long conducteurId);
     Optional<Trajet>findByTrajetId(Long trajetId);
     //depart et destination
     List<Trajet> findByDepartAndDestination(String depart, String destination);
@@ -20,7 +20,7 @@ public interface TrajetRepository extends JpaRepository<Trajet, Long> {
     List<Trajet> findByDateDepartBetween(LocalDateTime debut, LocalDateTime fin);
 
     //Places disponibles
-    List<Trajet> findByPlacesLibresGreaterThan(int places);
+    List<Trajet> findByPlaceLibreGreaterThan(int places);
     List<Trajet> findByDepartAndDestinationAndDateDepartBetween(
             String depart,
             String destination,

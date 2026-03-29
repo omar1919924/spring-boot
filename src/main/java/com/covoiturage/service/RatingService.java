@@ -13,3 +13,4 @@ public interface RatingService {
     Double getMoyenneConducteur(Long conducteurId);
     Double getMoyennePassager(Long passagerId);
 }
+

@@ -19,26 +19,26 @@ public class AdminCompteServiceImpl implements AdminCompteService{
 
 
     @Override
-    public void setLifeBan(Long clientId) {
+    public Client  setLifeBan(Long clientId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(()->new RuntimeException("client not existing"));
         client.setLifeBan(true);
-        clientRepository.save(client);
+        return clientRepository.save(client);
     }
 
     @Override
-    public void setTempBan(Long clientId , int jour) {
+    public Client  setTempBan(Long clientId , int jour) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(()->new RuntimeException("client not existing"));
         client.setStartBan(LocalDateTime.now());
         client.setFinBan(LocalDateTime.now().plusDays(jour));
-        clientRepository.save(client);
+        return clientRepository.save(client);
     }
 
 
     // force stop TempBan before due date
     @Override
-    public void endTempBan(Long clientId) {
+    public Client endTempBan(Long clientId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(()->new RuntimeException("client not existing"));
         if (client.getLifeBan()==true){
@@ -46,15 +46,15 @@ public class AdminCompteServiceImpl implements AdminCompteService{
         }
         client.setStartBan(null);
         client.setFinBan(null);
-        clientRepository.save(client);
+        return clientRepository.save(client);
     }
 
     @Override
-    public void endLifeBan(Long clientId) {
+    public Client endLifeBan(Long clientId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(()->new RuntimeException("client not existing"));
         client.setLifeBan(false);
-        clientRepository.save(client);
+        return clientRepository.save(client);
     }
 
     @Override

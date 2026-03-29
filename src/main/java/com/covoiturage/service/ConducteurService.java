@@ -11,8 +11,8 @@ import java.util.Optional;
 public interface ConducteurService {
 
     Conducteur inscrireConducteur(Conducteur conducteur);
-    Optional<Conducteur> chercherConducteurId(Long Id);
+    Conducteur chercherConducteurId(Long Id);
 
-    Conducteur updateConducteur(Conducteur conducteur);
+    Conducteur updateConducteur(Long id ,Conducteur conducteur);
 
 }
