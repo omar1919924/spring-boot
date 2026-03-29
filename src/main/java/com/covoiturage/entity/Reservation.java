@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -36,6 +37,7 @@ public class Reservation {
     @JoinColumn(name = "trajetId")
     private Trajet trajet;            // ← manquait aussi
 
+    @JsonIgnore
     @OneToOne(mappedBy = "reservation")
     private Paiement paiement;
 

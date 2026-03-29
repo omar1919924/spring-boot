@@ -29,6 +29,7 @@ public class TrajetServiceImpl implements TrajetService{
         if (trajetRepository.findById(t.getTrajetId()).isPresent()) {
             throw new RuntimeException("Trajet already exists");
         }
+        t.setTrajetStatut(TrajetStatut.OUVERT);
         t.setConducteur(conducteur);
         return trajetRepository.save(t);
     }
