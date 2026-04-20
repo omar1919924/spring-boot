@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class TrajetServiceImpl implements TrajetService{
@@ -24,11 +25,20 @@ public class TrajetServiceImpl implements TrajetService{
 
     @Override
     public Trajet proposerTrajet(Trajet t, Long conducteurId) {
+        if (t == null) {
+            throw new RuntimeException("trajet payload is required");
+        }
+
         Conducteur conducteur = conducteurRepository.findById(conducteurId)
                 .orElseThrow(()->new RuntimeException("conducteur not found"));
-        if (trajetRepository.findById(t.getTrajetId()).isPresent()) {
-            throw new RuntimeException("Trajet already exists");
+
+        if (t.getPlacesTotal() <= 0) {
+            throw new RuntimeException("placesTotal must be greater than 0");
         }
+        if (t.getPlaceLibre() <= 0 || t.getPlaceLibre() > t.getPlacesTotal()) {
+            t.setPlaceLibre(t.getPlacesTotal());
+        }
+
         t.setTrajetStatut(TrajetStatut.OUVERT);
         t.setConducteur(conducteur);
         return trajetRepository.save(t);
@@ -67,7 +77,7 @@ public class TrajetServiceImpl implements TrajetService{
             throw new RuntimeException("less than 24h can t cancel");
         }
 
-        if (trajet.getReservations().isEmpty()) {
+        if (trajet.getReservations() == null || trajet.getReservations().isEmpty()) {
             trajetRepository.delete(trajet);
             return;
         }
@@ -89,24 +99,26 @@ public class TrajetServiceImpl implements TrajetService{
     @Override
     public List<Trajet> getFutureTrajt(Long conducteurId) {
         List <Trajet> trajets = getMesTrajets(conducteurId);
+        List<Trajet> future = new ArrayList<>();
         for (Trajet trajet : trajets){
             LocalDateTime time = trajet.getDateDepart();
-            if (time.isBefore(LocalDateTime.now())){
-                trajets.remove(trajet);
+            if (time.isAfter(LocalDateTime.now())){
+                future.add(trajet);
             }
         }
-        return trajets;
+        return future;
     }
 
     @Override
     public List<Trajet> getPastTrajet(Long conducteurId) {
         List <Trajet> trajets = getMesTrajets(conducteurId);
+        List<Trajet> past = new ArrayList<>();
         for (Trajet trajet : trajets){
             LocalDateTime time = trajet.getDateDepart();
-            if (time.isAfter(LocalDateTime.now())){
-                trajets.remove(trajet);
+            if (time.isBefore(LocalDateTime.now())){
+                past.add(trajet);
             }
         }
-        return trajets;
+        return past;
     }
 }

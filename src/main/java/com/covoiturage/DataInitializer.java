@@ -1,6 +1,7 @@
 package com.covoiturage;
 
 import com.covoiturage.entity.Admin;
+import com.covoiturage.model.Role;
 import com.covoiturage.repository.AdminRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +26,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setPrenom("System");
             admin.setEmail("admin@covoiturage.com");
             admin.setPassword(passwordEncoder.encode("admin123")); // ✅ encoded
+            admin.setRole(Role.ADMIN);
             adminRepository.save(admin);
             System.out.println("✅ Admin créé avec succès");
         } else {

@@ -2,8 +2,10 @@ package com.covoiturage.service;
 
 import com.covoiturage.entity.Conducteur;
 import com.covoiturage.entity.Passager;
+import com.covoiturage.model.Role;
 import com.covoiturage.repository.PassagerRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,9 +14,11 @@ import java.util.Optional;
 public class PassagerServiceImpl implements PassagerService {
 
     private final PassagerRepository passagerRepository;
+    private final PasswordEncoder passwordEncoder;
+    public PassagerServiceImpl(PassagerRepository passagerRepository,PasswordEncoder passwordEncoder) {
 
-    public PassagerServiceImpl(PassagerRepository passagerRepository) {
         this.passagerRepository = passagerRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -22,6 +26,8 @@ public class PassagerServiceImpl implements PassagerService {
         if (passagerRepository.findByEmail(passager.getEmail()).isPresent()) {
             throw new RuntimeException("Email already in use");
         }
+        passager.setPassword(passwordEncoder.encode(passager.getPassword()));
+        passager.setRole(Role.PASSAGER);
         return passagerRepository.save(passager);
     }
 

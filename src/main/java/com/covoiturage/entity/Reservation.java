@@ -21,7 +21,8 @@ import lombok.Setter;
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long ReservationId;
+    @Column(name = "reservation_id")
+    private Long reservationId;
 
     private LocalDateTime dateReservation;
 

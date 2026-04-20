@@ -2,6 +2,7 @@
 
 package com.covoiturage.entity;
 
+import com.covoiturage.model.Role;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,8 +21,10 @@ import java.util.Objects;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     protected long userId;
+
+    @Enumerated(EnumType.STRING)
+    protected Role role;
     protected String nom;
     protected String prenom;
     protected String email;

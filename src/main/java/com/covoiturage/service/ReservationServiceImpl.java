@@ -7,6 +7,7 @@ import com.covoiturage.model.ReservationStatut;
 import com.covoiturage.repository.PassagerRepository;
 import com.covoiturage.repository.ReservationRepository;
 import com.covoiturage.repository.TrajetRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
+    @Transactional
     public Reservation creerReservation(Long trajetId, Long passagerId) {
         Passager passager = passagerRepository.findById(passagerId)
                 .orElseThrow(()->new RuntimeException("passager not found"));
@@ -45,6 +47,7 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
     @Override
+    @Transactional
     public void annulerReservation(Long reservationId, Long clientId) {
         Reservation reservation = reservationRepository.findByReservationId(reservationId)
                 .orElseThrow(()->new RuntimeException("reservation non existante"));
@@ -64,7 +67,7 @@ public class ReservationServiceImpl implements ReservationService{
         }
         // remboursement ave penalite 50%
         else if (LocalDateTime.now().plusHours(24).isAfter(trajet.getDateDepart())){
-            paiementService.escrowClient(trajet.getTrajetId(),reservation.getPaiement().getPaiementId(),5.0);
+            paiementService.escrowClient(trajet.getTrajetId(),reservation.getPaiement().getPaiementId(),0.5);
             reservation.setReservationStatut(ReservationStatut.ANNULE);
             trajet.setPlaceLibre(trajet.getPlaceLibre()+1);
         }
