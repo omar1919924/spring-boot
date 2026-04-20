@@ -12,5 +12,6 @@ public interface TrajetService {
     List<Trajet>rechercherTrajetBetween(String orig, String dest, LocalDateTime dateMin, LocalDateTime dateMax);
     void cancelTrajet (Long trajetId , Long ConducteurId);
     List<Trajet> getMesTrajets(Long conducteurId);
-
+    List<Trajet> getFutureTrajt(Long conducteurId);
+    List<Trajet>getPastTrajet(Long conducteurId);
 }

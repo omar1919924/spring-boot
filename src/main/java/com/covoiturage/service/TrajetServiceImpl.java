@@ -58,27 +58,55 @@ public class TrajetServiceImpl implements TrajetService{
     public void cancelTrajet(Long trajetId, Long conducteurId) {
         Trajet trajet = trajetRepository.findById(trajetId)
                 .orElseThrow(() -> new RuntimeException("Trajet not found"));
-        if (trajet.getConducteur().getUserId() != conducteurId) {
+        if (trajet.getConducteur().getUserId()!=conducteurId) {
             throw new RuntimeException("only the same conducteur that created a trajet can cancel it ");
         }
-        if(trajet.getReservations().isEmpty()){
-            trajetRepository.delete(trajet);
-        }
-        if((LocalDateTime.now().plusHours(24)).isBefore(trajet.getDateDepart())){
-            paiementService.escrowClients(trajetId);
-            // penalite
-            int numClient = trajet.getReservations().size();
-            paiementService.transfererCVE(trajet.getPrix()*numClient*0.2,conducteurId); //conducteur vers escrow
-            trajet.setTrajetStatut(TrajetStatut.ANNULE);
-        }
-        if((LocalDateTime.now().plusHours(24)).isAfter(trajet.getDateDepart())){
+
+        LocalDateTime cancellationDeadline = LocalDateTime.now().plusHours(24);
+        if (cancellationDeadline.isAfter(trajet.getDateDepart())) {
             throw new RuntimeException("less than 24h can t cancel");
         }
+
+        if (trajet.getReservations().isEmpty()) {
+            trajetRepository.delete(trajet);
+            return;
+        }
+
+        // Mark trip as cancelled before refund logic that requires ANNULE status.
+        trajet.annuler();
+        paiementService.escrowClients(trajetId);
+        // penalite
+        int numClient = trajet.getReservations().size();
+        paiementService.transfererCVE(trajet.getPrix() * numClient * 0.2, conducteurId); //conducteur vers escrow
 
     }
 
     @Override
     public List<Trajet> getMesTrajets(Long conducteurId) {
         return trajetRepository.findByConducteurUserId(conducteurId);
+    }
+
+    @Override
+    public List<Trajet> getFutureTrajt(Long conducteurId) {
+        List <Trajet> trajets = getMesTrajets(conducteurId);
+        for (Trajet trajet : trajets){
+            LocalDateTime time = trajet.getDateDepart();
+            if (time.isBefore(LocalDateTime.now())){
+                trajets.remove(trajet);
+            }
+        }
+        return trajets;
+    }
+
+    @Override
+    public List<Trajet> getPastTrajet(Long conducteurId) {
+        List <Trajet> trajets = getMesTrajets(conducteurId);
+        for (Trajet trajet : trajets){
+            LocalDateTime time = trajet.getDateDepart();
+            if (time.isAfter(LocalDateTime.now())){
+                trajets.remove(trajet);
+            }
+        }
+        return trajets;
     }
 }

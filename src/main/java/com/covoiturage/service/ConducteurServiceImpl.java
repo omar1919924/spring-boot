@@ -8,6 +8,7 @@ import com.covoiturage.repository.ConducteurRepository;
 import com.covoiturage.repository.UserRepository;
 import com.covoiturage.repository.VehiculeRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,6 @@ public class ConducteurServiceImpl implements ConducteurService {
         this.conducteurRepository = conducteurRepository;
         this.vehiculeRepository = vehiculeRepository;
     }
-
     @Override
     public Conducteur inscrireConducteur(Conducteur conducteur) {
         if(conducteurRepository.findByEmail(conducteur.getEmail()).isPresent()){

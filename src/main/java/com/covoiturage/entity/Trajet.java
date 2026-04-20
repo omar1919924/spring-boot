@@ -41,4 +41,13 @@ public class Trajet {
     @OneToMany(mappedBy = "trajet")
     private List<Rating> ratings;
 
+    public void annuler(){
+        setTrajetStatut(TrajetStatut.ANNULE);
+    }
+    public void complet(){
+        setTrajetStatut(TrajetStatut.COMPLET);
+    }
+    public void termine(){
+        setTrajetStatut(TrajetStatut.TERMINE);
+    }
 }
